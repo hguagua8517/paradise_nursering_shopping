@@ -41,7 +41,7 @@ const CartItem = ({ onContinueShopping }) => {
   };
 
   const handleRemove = (item) => {
-    dispatch(removeItem(item.name));
+    dispatch(removeItem({ name: item.name })); // Ensure the payload matches the reducer
     console.log('Removed:', item);
   };
 
