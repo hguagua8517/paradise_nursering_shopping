@@ -4,6 +4,7 @@ import CartItem from './CartItem';
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+    const [addedToCart, setAddedToCart] = useState({});
 
     const plantsArray = [
         {
@@ -252,6 +253,18 @@ function ProductList({ onHomeClick }) {
         e.preventDefault();
         setShowCart(false);
     };
+    const handleAddToCart = (plants) => {
+        setAddedToCart((prev) => {
+            const newCart = { ...prev };
+            if (newCart[plants.name]) {
+                newCart[plants.name].quantity += 1;
+            } else {
+                newCart[plants.name] = { ...plants, quantity: 1 };
+            }
+            return newCart;
+        });
+        alert(`${plants.name} has been added to the cart.`);
+    }
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -280,6 +293,23 @@ function ProductList({ onHomeClick }) {
             ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
             )}
+        <div className="product-grid">
+            {plantsArray.map((category, index) => (
+                <div key={index}>
+                    <h1><div>{category.category}</div></h1>
+                    <div className="product-list">
+                        {category.plants.map((plants, plantsIndex) => (
+                            <div className='product-card' key={plantsIndex}>
+                                <img className='product-image' src={plants.image} alt={plants.name}/>
+                                <div className='product-title'>{plants.name}</div>
+                                {/*Similarly like the above plant.name show other details like description and cost*/}
+                                <button className='product-button' onClick={()=> {handleAddToCart(plants)}}>Add to Cart</button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
         </div>
     );
 }
