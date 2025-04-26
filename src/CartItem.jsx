@@ -7,29 +7,47 @@ const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
+  // Convert cost to a number by removing the dollar sign and parsing it
+  const parseCost = (cost) => parseFloat(cost.replace('$', ''));
+
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    return cart.reduce((total, item) => {
+      return total + (parseCost(item.cost) * item.quantity);
+    }, 0).toFixed(2); // Convert to fixed decimal format
   };
 
   const handleContinueShopping = (e) => {
-   
+    e.preventDefault();
+    onContinueShopping(); // Call the function passed from the parent component
+    console.log('Continue Shopping clicked');
   };
 
 
 
   const handleIncrement = (item) => {
+    const updatedItem = { ...item, quantity: item.quantity + 1 };
+    dispatch(updateQuantity(updatedItem));
+    console.log('Incremented:', updatedItem);
+    // Optionally, you can also update the local state or perform other actions here
   };
 
   const handleDecrement = (item) => {
    
+    const updatedItem = { ...item, quantity: item.quantity - 1 };
+    dispatch(updateQuantity(updatedItem));
+    console.log('Decremented:', updatedItem);
+
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item.name));
+    console.log('Removed:', item);
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    return (parseCost(item.cost) * item.quantity).toFixed(2);
   };
 
   return (
